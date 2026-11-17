@@ -1,0 +1,27 @@
+import pandas as pd
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+
+# Load dataset
+data = load_iris(as_frame=True)
+df = data.data
+df['species'] = pd.Categorical.from_codes(data.target, data.target_names)
+
+# Introduce missing values
+df.loc[0, 'sepal length (cm)'] = np.nan
+df.loc[1, 'species'] = np.nan
+
+# Handle missing values
+df[df.columns[:-1]] = SimpleImputer(strategy='mean').fit_transform(df[df.columns[:-1]])
+df[['species']] = SimpleImputer(strategy='most_frequent').fit_transform(df[['species']])
+
+# Encode categorical variable
+df['species'] = LabelEncoder().fit_transform(df['species'])
+
+# Scale numerical values
+df[df.columns[:-1]] = StandardScaler().fit_transform(df[df.columns[:-1]])
+
+# Display processed data
+print(df.head())

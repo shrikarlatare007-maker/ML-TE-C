@@ -1,0 +1,19 @@
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import DBSCAN
+
+# Load dataset
+data = load_iris()
+X = data.data
+
+# Scale data
+X = StandardScaler().fit_transform(X)
+
+# Apply DBSCAN
+model = DBSCAN(eps=0.5, min_samples=5)
+labels = model.fit_predict(X)
+
+# Display results
+print("Cluster Labels:", labels)
+print("Number of Clusters:", len(set(labels) - {-1}))
+print("Noise Points:", sum(labels == -1))
